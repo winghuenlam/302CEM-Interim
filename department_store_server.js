@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded());
 
 app.use(bodyParser.json());
 app.use(cors());
+app.set('view engine', 'ejs');
 
 var multer  = require('multer');
 const upload = multer({ dest: 'tmp/csv/' });
@@ -26,6 +27,20 @@ const ds_db = mysql.createConnection({
 });
 
 ds_db.connect();
+
+app.get('/login', function(req,res){
+    res.sendFile(path.join(__dirname + '/login.html'));
+})
+
+app.get('/login/submit', function(req,res){
+    var username = req.query.username
+    var pw = req.query.pw
+    if (username!=='admin' || pw !== 'admin'){
+        res.render('login_fail');
+    }else{
+        res.redirect('/');
+    }
+})
 
 app.get('/', function(req,res){
     res.sendFile(path.join(__dirname + '/index.html'));
@@ -112,49 +127,15 @@ app.post('/ds/input-order', upload.single('csvfile'), function(req,res){
                             })
 
                             var totalPrice = 0
-                            var itemsTableHtml = ''
                             json['Order']['order_item'].map((v,i) => {
                                 totalPrice += v['price']
-                                itemsTableHtml += 
-                                    `<tr>
-                                        <td>${v['name']}</td>
-                                        <td style="text-align:center">${v['quantity']}</td>
-                                        <td style="text-align:center">${v['price']}</td>
-                                    </tr>`
                             })
 
-                            var html = 
-                                `<p>Successfully sent order to logistics company.</p>
-                                <p>Order ID: ${json['Order']['order_no']}</p>
-                                <p>Delivery ID: ${response['data']['delivery_id']}</p>
-
-                                <table>
-                                    <tr>
-                                        <th style="width:200px; text-align:left;">Item</th>
-                                        <th style="width:100px; text-align:center">Quantity</th>
-                                        <th style="width:100px; text-align:center">Price</th>
-                                    </tr>
-                                    ${itemsTableHtml}
-                                    <tr>
-                                        <th></th>
-                                        <th style="text-align:right">Total Price</th>
-                                        <th>${totalPrice}</th>
-                                    </tr>
-                                </table>
-
-                                <p>JSON String(request) from department store to logistics company:</p>
-                                <pre>${JSON.stringify(json, null, 4)}</pre>
-                                <br/>
-                                <p>JSON String(response) from logistics company to department store:</p>
-                                <pre>${JSON.stringify(response['data'], null, 4)}</pre>
-                                `
                         }else{
                             var html = `Unsuccessful.`
                         }
-                        res.set('Content-Type', 'text/html');
-                        res.send(new Buffer(html));
+                        res.render('ds_upload_success', { json: json, response:response, totalPrice:totalPrice });
 
-                        // res.send(msg2);
                     }).catch((error)=> {
                         console.log(error);
                     });
@@ -218,9 +199,11 @@ app.get('/ds/search/submit', function(req,res){
             </table>
             `
         
-            res.set('Content-Type', 'text/html');
-            res.send(new Buffer(html));
-            })
+            // res.set('Content-Type', 'text/html');
+            console.log(c_result)
+            // res.send(new Buffer(html));
+            res.render('ds_search_result', { info:c_result, item:i_res, totalPrice:totalPrice, orderId:orderId });
+        })
         }else{
             res.send('No Record');
         }

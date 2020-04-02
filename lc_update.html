@@ -2,7 +2,7 @@
 <html lang="en">
 <html>
         <head>
-            <title>Search Order</title>
+            <title>Update Delivery Status</title>
              <meta charset="utf-8">
               <meta name="viewport" content="width=device-width, initial-scale=1">
               <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -61,7 +61,6 @@
         <li><a href="http://localhost:4000/lc/search">Search Delivery</a></li>
         <li><a href="http://localhost:3000/ds/upload">Upload</a></li>
         <li><a href="http://localhost:4000/lc/update">Update Delivery</a></li>
-        <li><a href="http://localhost:3000/login">Logout</a></li>
       </ul>
     </div>
   </div>
@@ -71,11 +70,23 @@
     <div class="col-sm-2 sidenav">
     </div>
     <div class="col-sm-8 text-left"> 
-        <h2>Urls to upload/search for records</h2>
+        <h2>Update delivery status</h2>
 
-        <p><a href="http://localhost:3000/ds/upload">Upload file and create delivery record</a></p>
-        <p><a href="http://localhost:3000/ds/search">Search for Order records</a></p>
-        <p><a href="http://localhost:4000/lc/search">Search for Delivery records</a></p>
+        <form method="get" action="/lc/update/submit">
+            <p>
+                <label>Delivery ID: </label>
+                <input id="deliveryid" name="deliveryid" />
+            </p>
+            <p>
+                <label>Status: </label>
+                <select id="cars" name="status">
+                  <option value="delivered">Delivered</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+            </p>
+            <p><input type="submit" value="submit" id="submit" /> </p>
+        </form>
     </div>
    <div class="col-sm-2 sidenav">
 </div>

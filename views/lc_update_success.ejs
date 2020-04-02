@@ -2,47 +2,47 @@
 <html lang="en">
 <html>
         <head>
-            <title>Upload CSV</title>
-              <meta charset="utf-8">
+            <title>Update Delivery Status</title>
+             <meta charset="utf-8">
               <meta name="viewport" content="width=device-width, initial-scale=1">
               <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
               <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
               <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-            <style>
-            /* Remove the navbar's default margin-bottom and rounded borders */ 
-            .navbar {
-                margin-bottom: 0;
-                border-radius: 0;
-                height: 8vh;
-            }
-            
-            /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-            .row.content {height: 80vh;}
-            
-            /* Set gray background color and 100% height */
-            .sidenav {
-                padding-top: 20px;
-                background-color: #f1f1f1;
-                height: 100%;
-            }
-            
-            /* Set black background color, white text and some padding */
-            footer {
-                background-color: #555;
-                color: white;
-                padding: 15px;
-                height: 12vh;
-            }
-            
-            /* On small screens, set height to 'auto' for sidenav and grid */
-            @media screen and (max-width: 767px) {
-                .sidenav {
-                height: auto;
-                padding: 15px;
+              <style>
+                /* Remove the navbar's default margin-bottom and rounded borders */ 
+                .navbar {
+                    margin-bottom: 0;
+                    border-radius: 0;
+                    height: 8vh;
                 }
-                .row.content {height:auto;} 
-            }
-            </style>
+                
+                /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+                .row.content {height: 80vh;}
+                
+                /* Set gray background color and 100% height */
+                .sidenav {
+                    padding-top: 20px;
+                    background-color: #f1f1f1;
+                    height: 100%;
+                }
+                
+                /* Set black background color, white text and some padding */
+                footer {
+                    background-color: #555;
+                    color: white;
+                    padding: 15px;
+                    height: 12vh;
+                }
+                
+                /* On small screens, set height to 'auto' for sidenav and grid */
+                @media screen and (max-width: 767px) {
+                    .sidenav {
+                    height: auto;
+                    padding: 15px;
+                    }
+                    .row.content {height:auto;} 
+                }
+                </style>
         </head>
     <body>
         <nav class="navbar navbar-inverse">
@@ -70,12 +70,8 @@
     <div class="col-sm-2 sidenav">
     </div>
     <div class="col-sm-8 text-left"> 
-        <h1>Upload CSV</h1>
+        <h3>Delivery record (<%= deliveryId %>) was updated successfully</h3>
 
-        <form id="uploadcsv" enctype="multipart/form-data" method="POST" action="/ds/input-order">
-            <p><input id="csvfile" name="csvfile" type="file" /></p>
-            <p><input type="submit" value="submit" id="submit" /> </p>
-        </form>
     </div>
    <div class="col-sm-2 sidenav">
 </div>

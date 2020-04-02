@@ -5,11 +5,13 @@ const app = express();
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const moment = require('moment');
 var path = require('path');
 app.use(bodyParser.urlencoded());
 
 app.use(bodyParser.json());
 app.use(cors());
+app.set('view engine', 'ejs');
 
 const lc_db = mysql.createConnection({
     host     : 'localhost',
@@ -71,45 +73,34 @@ app.get('/lc/search/submit', function(req,res){
         var info_result = info_res[0]
         if(info_result){
             lc_db.query(itemSql, (err, item_res)=>{
-                console.log(item_res)
                 if(err) throw err;
-                var itemsTableHtml = ''
-                item_res.map((v,i) => {
-                    itemsTableHtml += 
-                        `<tr>
-                            <td style="text-align:center">${v['ds_product_id']}</td>
-                            <td style="text-align:center">${v['quantity']}</td>
-                            <td style="text-align:center">${v['delivery_status']}</td>
-                        </tr>`
-                })
-
-                var html = `
-                <h2>Delivery ID: ${deliveryId}</h2>
-                <p>Order ID: ${info_result['ds_order_id']}</p>
-                <p>Customer ID: ${info_result['ds_customer_id']}</p>
-                <p>Payment Amount: ${info_result['payment_amount']}</p>
-                <p>Cash on delivery: ${info_result['cash_on_delivery']}</p>
-                <p>Created date: ${info_result['created_date']}</p> <br/>
-                <h3>Delivery Status</h3>
-                <table>
-                    <tr>
-                        <th style="width:100px; text-align:center;">Item ID</th>
-                        <th style="width:100px; text-align:center">Quantity</th>
-                        <th style="width:100px; text-align:center">Status</th>
-                    </tr>
-                    ${itemsTableHtml}
-                </table>
-                `
-            
-                res.set('Content-Type', 'text/html');
-                res.send(new Buffer(html));
+                res.render('lc_search_result', { info:info_result, item:item_res });
             })
         }else{
             res.send('No Record');
         }
-
     })
+})
 
+app.get('/lc/update', function(req,res){
+    res.sendFile(path.join(__dirname + '/lc_update.html'));
+})
+
+app.get('/lc/update/submit', function(req,res){
+    var deliveryId = req.query.deliveryid
+    var status = req.query.status
+    const date = moment(Date.now()).format('YYYY-MM-DD');
+    console.log(date)
+    var deliverSql = `UPDATE delivery SET delivered_date = '${date}' WHERE id = ${deliveryId}`
+    var itemSql = `UPDATE item SET delivery_status = '${status}' WHERE delivery_id = ${deliveryId}`
+    console.log(itemSql)
+    lc_db.query(deliverSql, (err, deli_res)=>{
+        if(err) throw err;
+        lc_db.query(itemSql, (err, item_res)=>{
+            if(err) throw err;
+            res.render('lc_update_success', { deliveryId: deliveryId });
+        })
+    })
 })
 
 
